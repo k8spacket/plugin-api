@@ -1,35 +1,45 @@
 package plugin_api
 
-import "net/http"
+import (
+	"net/http"
+)
 
-type ReassembledStream struct {
-	StreamId      uint32
-	Src           string
-	SrcPort       string
-	SrcName       string
-	SrcNamespace  string
-	Dst           string
-	DstPort       string
-	DstName       string
-	DstNamespace  string
-	Closed        bool
-	BytesSent     float64
-	BytesReceived float64
-	Duration      float64
+type Address struct {
+	Addr      string
+	Port      uint16
+	Name      string
+	Namespace string
+}
+type TCPEvent struct {
+	Client  Address
+	Server  Address
+	TxB     uint64
+	RxB     uint64
+	DeltaUs uint64
 }
 
-type TCPPacketPayload struct {
-	StreamId uint32
-	Payload  []byte
+type TLSEvent struct {
+	Client         Address
+	Server         Address
+	TlsVersions    [8]uint16
+	Ciphers        [100]uint16
+	ServerName     string
+	UsedTlsVersion uint16
+	UsedCipher     uint16
 }
 
-type StreamPlugin interface {
+type TCPConsumerPlugin interface {
 	InitPlugin(manager PluginManager)
-	DistributeReassembledStream(stream ReassembledStream)
-	DistributeTCPPacketPayload(tcpPacket TCPPacketPayload)
+	DistributeTCPEvent(tcpEvent TCPEvent)
+}
+
+type TLSConsumerPlugin interface {
+	InitPlugin(manager PluginManager)
+	DistributeTLSEvent(tlsEvent TLSEvent)
 }
 
 type PluginManager interface {
-	RegisterPlugin(plugin StreamPlugin)
+	RegisterTCPPlugin(plugin TCPConsumerPlugin)
+	RegisterTLSPlugin(plugin TLSConsumerPlugin)
 	RegisterHttpHandler(pattern string, handler func(http.ResponseWriter, *http.Request))
 }
