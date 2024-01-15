@@ -1,5 +1,3 @@
-module github.com/k8spacket/plugin-api
+module github.com/k8spacket/plugin-api/v2
 
 go 1.21
-
-retract v1.0.0 // Published accidentally.
