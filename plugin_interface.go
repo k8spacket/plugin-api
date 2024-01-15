@@ -21,8 +21,8 @@ type TCPEvent struct {
 type TLSEvent struct {
 	Client         Address
 	Server         Address
-	TlsVersions    [8]uint16
-	Ciphers        [100]uint16
+	TlsVersions    []uint16
+	Ciphers        []uint16
 	ServerName     string
 	UsedTlsVersion uint16
 	UsedCipher     uint16
