@@ -28,13 +28,17 @@ type TLSEvent struct {
 	UsedCipher     uint16
 }
 
-type TCPConsumerPlugin interface {
+type ConsumerPlugin interface {
 	InitPlugin(manager PluginManager)
+}
+
+type TCPConsumerPlugin interface {
+	ConsumerPlugin
 	DistributeTCPEvent(tcpEvent TCPEvent)
 }
 
 type TLSConsumerPlugin interface {
-	InitPlugin(manager PluginManager)
+	ConsumerPlugin
 	DistributeTLSEvent(tlsEvent TLSEvent)
 }
 
